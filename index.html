@@ -1,0 +1,310 @@
+<!doctype html>
+<html lang="es"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#080808">
+  <title>Catálogo digital | Lumina</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+  <style>
+    :root { --ink: #080808; --paper: #ffffff; --accent: #ffc400; }
+    *, *::before, *::after { box-sizing: border-box; }
+    html { overflow-x: hidden; }
+    body {
+      width: 100%;
+      min-width: 0;
+      margin: 0;
+      overflow-x: hidden;
+      background: var(--ink);
+      color: var(--paper);
+      font-family: 'Montserrat', Arial, sans-serif;
+    }
+    .page-shell { width: 100%; min-width: 0; }
+    .content-width { width: min(100% - 36px, 920px); margin-inline: auto; }
+    .cover {
+      position: relative;
+      height: clamp(215px, 37vw, 390px);
+      overflow: hidden;
+      background: #171717;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .cover::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: linear-gradient(180deg, transparent 40%, rgba(8,8,8,.36));
+    }
+    .cover img { display: block; width: 100%; height: 100%; object-fit: contain; object-position: center; }
+    .identity { position: relative; padding-top: 73px; }
+    .profile-frame {
+      position: absolute;
+      top: -54px;
+      left: 0;
+      width: 108px;
+      height: 108px;
+      padding: 5px;
+      border-radius: 50%;
+      background: var(--ink);
+      box-shadow: 0 0 0 2px var(--accent);
+    }
+    .profile-frame img { width: 100%; height: 100%; display: block; border-radius: 50%; object-fit: cover; }
+    .eyebrow { color: var(--accent); font-size: 11px; font-weight: 700; letter-spacing: .22em; text-transform: uppercase; }
+    .company-title { margin: 10px 0 7px; font-weight: 800; line-height: 1.16; letter-spacing: -.045em; overflow-wrap: anywhere; }
+    .subtitle { margin: 0; font-size: 16px; color: #d1d1d1; }
+    .rule { height: 1px; margin: 37px 0 34px; background: #343434; }
+    .section-heading { margin: 0 0 9px; font-weight: 700; letter-spacing: -.035em; }
+    .section-note { margin: 0 0 26px; color: #bcbcbc; line-height: 1.6; font-size: 14px; }
+    .brochure-list { display: grid; gap: 13px; padding: 0; margin: 0; list-style: none; }
+    .brochure-link {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      width: 100%;
+      min-height: 70px;
+      padding: 17px 20px;
+      border: 2px solid var(--accent);
+      border-radius: 12px;
+      background: var(--paper);
+      color: #080808;
+      font-weight: 700;
+      line-height: 1.35;
+      text-decoration: none;
+      overflow-wrap: anywhere;
+      transition: transform .2s ease, box-shadow .2s ease;
+    }
+    .brochure-link:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(255,196,0,.17); }
+    .brochure-link:focus-visible { outline: 3px solid var(--paper); outline-offset: 4px; }
+    .link-arrow { flex: none; width: 19px; height: 19px; }
+    .footer { padding: 42px 0 28px; color: #929292; font-size: 12px; }
+    .splash {
+      position: fixed;
+      inset: 0;
+      z-index: 20;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      pointer-events: none;
+      background: var(--ink);
+      opacity: 1;
+      transition: opacity .24s ease;
+    }
+    .splash.is-gone { opacity: 0; visibility: hidden; }
+    .splash-center { position: relative; z-index: 2; text-align: center; padding: 20px; }
+    .splash-mark {
+      display: grid;
+      place-items: center;
+      width: 65px;
+      height: 65px;
+      margin: 0 auto 19px;
+      border: 2px solid var(--accent);
+      border-radius: 17px;
+      color: var(--accent);
+      font-size: 30px;
+      font-weight: 800;
+      letter-spacing: -.08em;
+    }
+    .splash-name { margin: 0; font-weight: 700; letter-spacing: -.025em; }
+    .wave-art { position: absolute; width: max(110%, 780px); height: 100%; left: 50%; top: 0; transform: translateX(-50%); opacity: .68; }
+    .wave-art path { fill: none; stroke: var(--accent); stroke-width: 1.15; opacity: .68; animation: drift 3.8s ease-in-out infinite alternate; }
+    .wave-art path:nth-child(2n) { animation-delay: -.9s; }
+    .wave-art path:nth-child(3n) { animation-delay: -1.7s; }
+    @keyframes drift { to { transform: translateY(17px) translateX(12px); opacity: .32; } }
+    @media (min-width: 640px) {
+      .content-width { width: min(100% - 80px, 920px); }
+      .identity { padding-top: 91px; }
+      .profile-frame { width: 132px; height: 132px; top: -66px; }
+      .rule { margin: 48px 0 43px; }
+      .brochure-list { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 17px; }
+      .brochure-link { min-height: 90px; padding: 21px 24px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
+    }
+  
+/* DISEÑO DE BOTONES DE LUMINA */
+
+.social-links {
+  margin-top: 45px;
+  text-align: center;
+}
+
+.social-links p {
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+.social-buttons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 24px;
+}
+
+.social-button {
+  width: 64px;
+  height: 64px;
+  border: 2px solid #ffc400;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  background: transparent;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.social-button svg {
+  width: 28px;
+  height: 28px;
+}
+
+.social-button:hover {
+  background: #ffc400;
+  color: #080808;
+  transform: translateY(-3px);
+}
+
+.social-button:focus-visible {
+  outline: 3px solid #ffffff;
+  outline-offset: 4px;
+}
+  
+  </style>
+
+ </head>
+ <body data-template-id="__page-root" style="background: rgb(8, 8, 8);">
+  <div id="splash" class="splash" aria-hidden="true">
+   <svg class="wave-art" viewBox="0 0 1200 750" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <path d="M-100 390 C120 95 260 675 495 360 S870 98 1300 415"></path> <path d="M-100 406 C135 113 275 653 505 375 S890 120 1300 430"></path> <path d="M-100 422 C150 130 290 633 515 390 S910 142 1300 445"></path> <path d="M-100 438 C165 150 305 615 525 405 S930 163 1300 460"></path> <path d="M-100 454 C180 172 320 597 535 420 S950 185 1300 475"></path> <path d="M-100 470 C195 193 335 578 545 435 S970 205 1300 490"></path> <path d="M-100 486 C210 214 350 560 555 450 S990 226 1300 505"></path> <path d="M-100 502 C225 235 365 543 565 465 S1010 247 1300 520"></path>
+   </svg>
+<div class="splash-mark" aria-hidden="true">
+  <img src="logo.png" alt=""
+       style="width:100%; height:100%; object-fit:contain;">
+</div>
+
+    <p data-template-id="splash-logo" class="canva-text splash-name" style="color: rgb(255, 255, 255); font-weight: 700; font-style: normal; font-size: 16px;">Catalogo</p>
+   </div>
+  </div>
+  <div class="page-shell">
+   <header>
+    
+<div class="cover">
+  <img src="portada.png" alt="Portada de Lumina">
+</div>
+    <div class="content-width identity">
+     <div class="profile-frame">
+      <img data-template-id="profile-image" class="canva-image" loading="lazy" src="logo.png" alt="Esfera abstracta dorada con franjas onduladas sobre un fondo oscuro.">
+     </div>
+     <p data-template-id="identity-eyebrow" class="canva-text eyebrow" style="color: rgb(255, 196, 0); font-weight: 700; font-style: normal; font-size: 11px;">Transformamos la complejidad del subsuelo en conocimiento que impulsa decisiones.</p>
+     <h1 data-template-id="company-name" class="canva-text company-title" style="color: rgb(255, 255, 255); font-weight: 800; font-style: normal; font-size: 32px;">De los datos al conocimiento. Del conocimiento a la decisión</h1>
+     <p data-template-id="catalog-subtitle" class="canva-text subtitle" style="color: rgb(209, 209, 209); font-weight: 400; font-style: normal; font-size: 16px;">El futuro de la exploración comienza con una nueva forma de interpretar.</p>
+    </div>
+   </header>
+   <main class="content-width">
+    <div class="rule" aria-hidden="true"></div>
+    <section aria-labelledby="brochures-heading">
+     <h2 id="brochures-heading" data-template-id="brochures-heading" class="canva-text section-heading" style="color: rgb(255, 255, 255); font-weight: 700; font-style: normal; font-size: 24px;">Nuestros brochures</h2>
+     <p data-template-id="brochures-description" class="canva-text section-note" style="color: rgb(188, 188, 188); font-weight: 400; font-style: normal; font-size: 14px;">Explora nuestras soluciones y conoce más sobre lo que hacemos.</p>
+     <ul id="brochure-list" class="brochure-list" aria-label="Enlaces a brochures"></ul>
+     
+<!-- BOTONES DE LUMINA -->
+<div class="social-links">
+  <p>Conecta con Lumina</p>
+
+  <div class="social-buttons">
+
+    <!-- LinkedIn -->
+    <a href="https://www.linkedin.com/company/lumina-geophysical-llc/"
+       target="_blank"
+       rel="noopener noreferrer"
+       class="social-button"
+       aria-label="LinkedIn de Lumina">
+      <svg viewBox="0 0 24 24" fill="currentColor"
+           aria-hidden="true">
+        <path d="M20.45 2H3.55C2.69 2 2 2.68 2 3.52v16.96c0 .84.69 1.52 1.55 1.52h16.9c.86 0 1.55-.68 1.55-1.52V3.52c0-.84-.69-1.52-1.55-1.52ZM7.93 18.75H4.98V9.2h2.95v9.55ZM6.46 7.9a1.71 1.71 0 1 1 0-3.42 1.71 1.71 0 0 1 0 3.42Zm12.29 10.85H15.8V14.1c0-1.11-.02-2.54-1.55-2.54-1.55 0-1.79 1.21-1.79 2.46v4.73H9.51V9.2h2.83v1.3h.04c.39-.74 1.36-1.52 2.79-1.52 2.98 0 3.58 1.96 3.58 4.5v5.27Z"/>
+      </svg>
+    </a>
+
+    <!-- Página web -->
+    <a href="https://luminageo.com/"
+       target="_blank"
+       rel="noopener noreferrer"
+       class="social-button"
+       aria-label="Página web de Lumina">
+      <svg viewBox="0 0 24 24" fill="none"
+           stroke="currentColor" stroke-width="1.8"
+           aria-hidden="true">
+        <circle cx="12" cy="12" r="9"/>
+        <path d="M3 12h18"/>
+        <path d="M12 3c-5 5-5 13 0 18"/>
+        <path d="M12 3c5 5 5 13 0 18"/>
+      </svg>
+    </a>
+
+  </div>
+</div>
+<!-- FIN DE BOTONES -->
+
+    </section>
+   </main>
+   <footer class="content-width footer">
+    <p data-template-id="footer-text" class="canva-text" style="color: rgb(146, 146, 146); font-weight: 400; font-style: normal; font-size: 12px;">Lumina  · Catálogo digital</p>
+   </footer>
+  </div>
+  <template id="brochure-template">
+   <li><a data-template-id="brochure-link" class="canva-link brochure-link" target="_blank" rel="noopener noreferrer"> <span data-template-id="brochure-title" class="canva-text"></span>
+     <svg class="link-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M7 17 17 7M8 7h9v9"></path>
+     </svg></a></li>
+  </template>
+  <script>
+    // Edita este arreglo para agregar, quitar o actualizar brochures.
+    // Sustituye cada URL de ejemplo por el enlace real del documento.
+    const brochures = [
+      { title: "Nuestros servicios", url: "https://qrco.de/bgqVsd" },
+      { title: "Soluciones de procesamiento sísmico", url: "https://qrco.de/bgqVtE" },
+      { title: "Blade™", url: "https://qrco.de/bgqVtW" },
+      { title: "DeepInvert™", url: "https://qrco.de/bgqVuM" },
+      { title: "Descomposición espectral", url: "https://qrco.de/bgqVuW" },
+      { title: "FaultCube™", url: "https://qrco.de/bgqVuc" },
+      { title: "FaultML™", url: "https://qrco.de/bgqW1s" },
+      { title: "HorizonML™", url: "https://qrco.de/bgqW24" },
+      { title: "JIO", url: "https://qrco.de/bgqW2F" },
+      { title: "Leonardo™", url: "https://qrco.de/bgqW2b" },
+      { title: "Phase Decomposition™", url: "https://qrco.de/bgqW2o" },
+      { title: "PredictML™", url: "https://qrco.de/bgqW2x" },
+      { title: "Supresión Adaptativa de Múltiples", url: "https://qrco.de/bgqW3I" },
+      { title: "Terrasa™", url: "https://qrco.de/bgqW3S" },
+      { title: "Ultra™", url: "https://qrco.de/bgqW3d" }
+    ];
+
+    const list = document.getElementById("brochure-list");
+    const template = document.getElementById("brochure-template");
+
+    for (const brochure of brochures) {
+      const item = template.content.cloneNode(true);
+      const link = item.querySelector("a");
+      item.querySelector('[data-template-id="brochure-title"]').textContent = brochure.title;
+      link.href = brochure.url;
+       if (brochure.url.startsWith("#brochure-")) { link.removeAttribute("href"); link.setAttribute("aria-disabled", "true"); link.title = "Enlace pendiente"; }
+      link.setAttribute("aria-label", `${brochure.title} (se abre en una pestaña nueva)`);
+      list.appendChild(item);
+    }
+
+    const splash = document.getElementById("splash");
+    const delay = window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 50 : 900;
+    window.setTimeout(() => {
+      splash.classList.add("is-gone");
+      window.setTimeout(() => splash.remove(), 260);
+    }, delay);
+  </script>
+ 
+</body></html>
