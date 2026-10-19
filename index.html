@@ -91,11 +91,95 @@
       pointer-events: none;
       background: var(--ink);
       opacity: 1;
-      transition: opacity .24s ease;
+      transition: opacity .4s ease;
     }
     .splash.is-gone { opacity: 0; visibility: hidden; }
     .splash-center { position: relative; z-index: 2; text-align: center; padding: 20px; }
     .splash-mark {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  padding: 20px;
+}
+
+/* Isotipo oficial */
+.splash-mark {
+  display: grid;
+  place-items: center;
+  width: 150px;
+  height: 150px;
+  margin: 0 auto;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  animation: logoReveal 1.6s
+    cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.splash-mark img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* Aparición y crecimiento cinematográfico */
+@keyframes logoReveal {
+  0% {
+    opacity: 0;
+    transform: scale(0.45);
+  }
+
+  40% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Ocultar texto adicional */
+.splash-name {
+  display: none;
+}
+
+/* Ondas amarillas sutiles */
+.wave-art {
+  position: absolute;
+  width: max(110%, 780px);
+  height: 100%;
+  left: 50%;
+  top: 0;
+  transform: translateX(-50%);
+  opacity: 0.42;
+  pointer-events: none;
+}
+
+.wave-art path {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 0.85;
+  opacity: 0.5;
+  animation: drift 5s ease-in-out
+    infinite alternate;
+}
+
+.wave-art path:nth-child(2n) {
+  animation-delay: -0.9s;
+}
+
+.wave-art path:nth-child(3n) {
+  animation-delay: -1.7s;
+}
+
+@keyframes drift {
+  to {
+    transform: translateY(12px) translateX(8px);
+    opacity: 0.28;
+  }
+}
       display: grid;
       place-items: center;
       width: 65px;
@@ -299,12 +383,24 @@
       list.appendChild(item);
     }
 
-    const splash = document.getElementById("splash");
-    const delay = window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 50 : 900;
-    window.setTimeout(() => {
-      splash.classList.add("is-gone");
-      window.setTimeout(() => splash.remove(), 260);
-    }, delay);
+   
+const splash = document.getElementById("splash");
+
+const reduceMotion = window.matchMedia(
+  "(prefers-reduced-motion: reduce)"
+).matches;
+
+const delay = reduceMotion ? 50 : 2000;
+
+window.setTimeout(() => {
+  splash.classList.add("is-gone");
+
+  window.setTimeout(() => {
+    splash.remove();
+  }, reduceMotion ? 20 : 400);
+
+}, delay);
+
   </script>
  
 </body></html>
